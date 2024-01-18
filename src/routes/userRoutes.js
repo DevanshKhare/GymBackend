@@ -3,7 +3,7 @@ import userController from '../controllers/userController.js';
 
 const router = express.Router();
 
-router.get('/users', userController.getAllUsers);
+router.get('/getAllUsers', userController.getAllUsers);
 
 router.post('/createUser', userController.createUser);
 
