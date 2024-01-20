@@ -10,12 +10,23 @@ const userController = {
     },
     
     createUser: async(req, res) => {
-        const { name, email, password, city, phone } = req.body;
-        const newUser = await UserService.createUser(name, email, password, city, phone)
+        const { firstName, lastName, email, password, city, phone } = req.body;
+        const newUser = await UserService.createUser(firstName, lastName, email, password, city, phone)
         if(newUser){
             res.status(201).send("User created successfully");
         } else {
             res.status(500).send("Something went wrong");
+        }
+    },
+    
+    login: async(req, res) => {
+        const { email, password} = req.body;
+
+        const user = await UserService.userLogin(email, password);
+        if(user.status){
+            res.status(200).send("Login successful");
+        } else {
+            res.status(401).send("Invalid credentials");
         }
     }
 }
