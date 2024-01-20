@@ -1,5 +1,5 @@
-import User from "../models/userModel.js"
-import bcrypt from "bcryptjs"
+import User from "../models/userModel.js";
+import bcrypt from "bcryptjs";
 
 const userServices = {
   getAllUsers: async () => {
@@ -28,21 +28,27 @@ const userServices = {
   },
 
   userLogin: async (email, password) => {
-    const response = {status: false, data: {}, message: "Something went wrong"}
+    const response = {
+      status: false,
+      user: {},
+      message: "Something went wrong",
+    };
     try {
-      const user = await User.findOne({email});
+      const user = await User.findOne({ email });
       if (user) {
-        const passwordMatch = await bcrypt.compare(password, user.password).then((res)=>{
-          return res;
-        });
+        const passwordMatch = await bcrypt
+          .compare(password, user.password)
+          .then((res) => {
+            return res;
+          });
         if (passwordMatch) {
-           response.status = true;
-           response.data.user = user;
-           response.message = "Login successful"
-          }
+          response.status = true;
+          response.user = user;
+          response.message = "Login successful";
         }
-        return response;
+      }
+      return response;
     } catch (error) {}
   },
 };
-export default userServices
+export default userServices;
