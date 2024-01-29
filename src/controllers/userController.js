@@ -28,12 +28,18 @@ const userController = {
 
   login: async (req, res) => {
     const { email, password } = req.body;
-
-    const user = await UserService.userLogin(email, password);
-    if (user.status) {
-      res.status(200).send(user);
-    } else {
-      res.status(401).send("Invalid credentials");
+    try {
+      const user = await UserService.userLogin(email, password);
+      if (user && user.status) {
+        res.status(200).send(user);
+      } else {
+        res.status(401).send({ message: user.message });
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      res
+        .status(500)
+        .send({ message: "Something went wrong. Please try again later." });
     }
   },
 };

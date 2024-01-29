@@ -30,25 +30,33 @@ const userServices = {
   userLogin: async (email, password) => {
     const response = {
       status: false,
-      user: {},
-      message: "Something went wrong",
+      user: null,
+      message: "Login failed. Please check your credentials.",
     };
+
     try {
       const user = await User.findOne({ email });
-      if (user) {
-        const passwordMatch = await bcrypt
-          .compare(password, user.password)
-          .then((res) => {
-            return res;
-          });
+
+      if (!user) {
+        response.message = "User not found. Please check your email.";
+      } else {
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
         if (passwordMatch) {
           response.status = true;
           response.user = user;
           response.message = "Login successful";
+        } else {
+          response.message = "Incorrect password. Please try again.";
         }
       }
+
       return response;
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error during login:", error);
+      response.message = "Something went wrong. Please try again later.";
+      return response;
+    }
   },
 };
 export default userServices;
