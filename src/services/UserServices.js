@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const userServices = {
   getAllUsers: async () => {
@@ -41,8 +42,8 @@ const userServices = {
         response.message = "User not found. Please check your email.";
       } else {
         const passwordMatch = await bcrypt.compare(password, user.password);
-
         if (passwordMatch) {
+          response.token = jwt.sign({userId: user._id}, "testdata")
           response.status = true;
           response.user = user;
           response.message = "Login successful";
